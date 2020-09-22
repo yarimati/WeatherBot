@@ -6,16 +6,17 @@ namespace WeatherBot.Domain.Services
 {
     public class CommandService : ICommandService
     {
-        private readonly List<TelegramCommand> _commands;
+        private readonly List<ITelegramCommand> _commands;
 
         public CommandService()
         {
-            _commands = new List<TelegramCommand>
+            _commands = new List<ITelegramCommand>
             {
-                new StartCommand()
+                new StartCommand(),
+                new WeatherCommand()
             };
         }
 
-        public List<TelegramCommand> Get() => _commands;
+        public List<ITelegramCommand> Get() => _commands;
     }
 }

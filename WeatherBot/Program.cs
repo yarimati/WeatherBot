@@ -7,24 +7,24 @@ namespace WeatherBot
 {
     class Program
     {
-        static readonly CommandService service = new CommandService();
-        static ITelegramBotClient botClient;
+        static readonly CommandService _service = new CommandService();
+        static ITelegramBotClient _botClient;
         static void Main(string[] args)
         {
-            botClient = new TelegramBotClient("Token");
+            _botClient = new TelegramBotClient("Token");
 
-            var me = botClient.GetMeAsync().Result;
+            var me = _botClient.GetMeAsync().Result;
             Console.WriteLine(
                 $"Hello, World! I am user {me.Id} and my name is {me.FirstName}."
             );
 
-            botClient.OnMessage += Bot_OnMessage;
-            botClient.StartReceiving();
+            _botClient.OnMessage += Bot_OnMessage;
+            _botClient.StartReceiving();
 
             Console.WriteLine("Press any key to exit");
             Console.ReadKey();
 
-            botClient.StopReceiving();
+            _botClient.StopReceiving();
         }
         static async void Bot_OnMessage(object sender, MessageEventArgs e)
         {
@@ -32,11 +32,11 @@ namespace WeatherBot
             {
                 var message = e.Message;
 
-                foreach (var command in service.Get())
+                foreach (var command in _service.Get())
                 {
                     if (command.Contains(message))
                     {
-                        await command.Execute(message, botClient);
+                        await command.Execute(message, _botClient);
                         break;
                     }
                 }

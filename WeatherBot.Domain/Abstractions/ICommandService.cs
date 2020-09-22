@@ -4,6 +4,6 @@ namespace WeatherBot.Domain.Abstractions
 {
     public interface ICommandService
     {
-        List<TelegramCommand> Get();
+        List<ITelegramCommand> Get();
     }
 }

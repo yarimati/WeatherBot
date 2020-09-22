@@ -7,10 +7,10 @@ using WeatherBot.Domain.Abstractions;
 
 namespace WeatherBot.Domain.Commands
 {
-    public class StartCommand : TelegramCommand
+    public class StartCommand : BaseClient, ITelegramCommand
     {
-        public override string Name => @"/start";
-        public override async Task Execute(Message message, ITelegramBotClient botClient)
+        public string Name => @"/start";
+        public async Task Execute(Message message, ITelegramBotClient botClient)
         {
             var chatId = message.Chat.Id;
 
@@ -20,7 +20,19 @@ namespace WeatherBot.Domain.Commands
                 {
                     new[]
                     {
-                        new KeyboardButton("\U0001F3E0 General")
+                        new KeyboardButton("Weather")
+                    },
+                    new[]
+                    {
+                        new KeyboardButton("Weather")
+                    },
+                    new[]
+                    {
+                        new KeyboardButton("Weather")
+                    },
+                    new[]
+                    {
+                        new KeyboardButton("Weather")
                     }
                 }
             };
@@ -28,7 +40,7 @@ namespace WeatherBot.Domain.Commands
                 parseMode: ParseMode.Html, false, false, 0, keyBoard);
         }
 
-        public override bool Contains(Message message)
+        public bool Contains(Message message)
         {
             if (message.Type != MessageType.Text)
                 return false;
