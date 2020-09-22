@@ -1,0 +1,9 @@
+﻿using System.Collections.Generic;
+
+namespace WeatherBot.Domain.Abstractions
+{
+    public interface ICommandService
+    {
+        List<TelegramCommand> Get();
+    }
+}
