@@ -13,7 +13,8 @@ namespace WeatherBot.Domain.Services
             _commands = new List<ITelegramCommand>
             {
                 new StartCommand(),
-                new WeatherCommand()
+                new WeatherCommand(),
+                new CovidCommand()
             };
         }
 

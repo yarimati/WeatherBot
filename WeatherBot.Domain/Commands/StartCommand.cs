@@ -24,19 +24,11 @@ namespace WeatherBot.Domain.Commands
                     },
                     new[]
                     {
-                        new KeyboardButton("Weather")
-                    },
-                    new[]
-                    {
-                        new KeyboardButton("Weather")
-                    },
-                    new[]
-                    {
-                        new KeyboardButton("Weather")
+                        new KeyboardButton("Covid")
                     }
                 }
             };
-            await botClient.SendTextMessageAsync(chatId, "TestTest",
+            await botClient.SendTextMessageAsync(chatId, "Helloooo",
                 parseMode: ParseMode.Html, false, false, 0, keyBoard);
         }
 

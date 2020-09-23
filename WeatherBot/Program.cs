@@ -11,7 +11,7 @@ namespace WeatherBot
         static ITelegramBotClient _botClient;
         static void Main(string[] args)
         {
-            _botClient = new TelegramBotClient("Token");
+            _botClient = new TelegramBotClient("TokenTg");
 
             var me = _botClient.GetMeAsync().Result;
             Console.WriteLine(
