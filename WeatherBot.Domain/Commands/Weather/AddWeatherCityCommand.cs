@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -14,22 +12,23 @@ using WeatherBot.Domain.Abstractions;
 using WeatherBot.Domain.Models.Weather;
 using WeatherBot.Domain.Models.Weather.Cities;
 
-namespace WeatherBot.Domain.Commands
+namespace WeatherBot.Domain.Commands.Weather
 {
-    public class WeatherCommand : BaseClient, ITelegramCommand
+    public class AddWeatherCityCommand : BaseClient, ITelegramCommand
     {
-        public string Name => "Weather";
-        public async Task Execute(Message message, ITelegramBotClient botClient)
+        public string Name => @"/addWeatherCity";
+        public async Task Execute(Message message, ITelegramBotClient botClient, params string[] values)
         {
             var chatId = message.Chat.Id;
 
-            var city = message.Text.Split(' ').LastOrDefault(); // request "Weather (city)"
+            CurrentState.State = State.Default;
 
-            var weatherObj = await GetWeatherData(city);
+            var weatherObj = await GetWeatherData(message.Text);
 
             if (weatherObj == null)
             {
-                await botClient.SendTextMessageAsync(chatId, "Wrong value (Weather Kyiv)", ParseMode.Html);
+                CurrentState.State = State.Weather;
+                await botClient.SendTextMessageAsync(chatId, "City doesn`t exist try more", ParseMode.Html);
                 return;
             }
 
@@ -44,15 +43,20 @@ namespace WeatherBot.Domain.Commands
                     },
                     new[]
                     {
-                        new KeyboardButton("Covid"),
+                        new KeyboardButton(@"/covid"),
+                    },
+                    new[]
+                    {
+                        new KeyboardButton(@"/weather"),
                     }
                 }
             };
 
-            await botClient.SendTextMessageAsync(chatId, $"Current weather in {city} : {weatherObj.main.temp} C",
+            await botClient.SendTextMessageAsync(chatId, $"Current weather in {message.Text} : {weatherObj.main.temp} C",
                 parseMode: ParseMode.Html, false, false, 0, keyBoard);
 
         }
+
         public bool Contains(Message message)
         {
             if (message.Type != MessageType.Text)
@@ -60,7 +64,6 @@ namespace WeatherBot.Domain.Commands
 
             return message.Text.Contains(Name);
         }
-
         private async Task<WeatherForecastModel> GetWeatherData(string city)
         {
             if (string.IsNullOrEmpty(city) || city == "Weather")
@@ -71,7 +74,7 @@ namespace WeatherBot.Domain.Commands
             if (string.IsNullOrEmpty(cityId))
                 return await Task.FromResult<WeatherForecastModel>(null);
 
-            var weatherJson = await client.GetStringAsync("Weather/Api"); //https://openweathermap.org/api
+            var weatherJson = await client.GetStringAsync(ApiKeys.WeatherApi);
 
             var weatherObj = JsonConvert.DeserializeObject<WeatherForecastModel>(weatherJson);
 
@@ -82,7 +85,8 @@ namespace WeatherBot.Domain.Commands
         {
             List<CityInfoModel> items;
 
-            using (StreamReader r = new StreamReader(@"C:\Users\nikim\source\repos\WeatherBot\WeatherBot.Domain\city.list.json"))
+            using (StreamReader r =
+                new StreamReader(ApiKeys.PathCityList))
             {
                 string jsonText = r.ReadToEnd();
                 items = JsonConvert.DeserializeObject<List<CityInfoModel>>(jsonText);
@@ -95,7 +99,5 @@ namespace WeatherBot.Domain.Commands
 
             return cityId.id.ToString();
         }
-
-
     }
 }

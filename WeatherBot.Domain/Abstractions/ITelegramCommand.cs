@@ -11,5 +11,8 @@ namespace WeatherBot.Domain.Abstractions
         public Task Execute(Message message, ITelegramBotClient botClient);
 
         public bool Contains(Message message);
+
+
     }
+
 }

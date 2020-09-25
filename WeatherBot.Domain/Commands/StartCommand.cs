@@ -14,17 +14,19 @@ namespace WeatherBot.Domain.Commands
         {
             var chatId = message.Chat.Id;
 
+            CurrentState.State = State.Start;
+
             var keyBoard = new ReplyKeyboardMarkup
             {
                 Keyboard = new[]
                 {
                     new[]
                     {
-                        new KeyboardButton("Weather")
+                        new KeyboardButton(@"/weather")
                     },
                     new[]
                     {
-                        new KeyboardButton("Covid")
+                        new KeyboardButton(@"/covid")
                     }
                 }
             };
@@ -39,5 +41,6 @@ namespace WeatherBot.Domain.Commands
 
             return message.Text.Contains(Name);
         }
+
     }
 }
