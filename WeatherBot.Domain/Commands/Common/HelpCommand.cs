@@ -4,19 +4,25 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using WeatherBot.Domain.Abstractions;
 
-namespace WeatherBot.Domain.Commands.Weather
+namespace WeatherBot.Domain.Commands.Common
 {
-    public class WeatherCommand : ITelegramCommand
+    public class HelpCommand : ITelegramCommand
     {
-        public string Name => @"/weather";
+        public string Name => @"/help";
 
         public async Task Execute(Message message, ITelegramBotClient botClient)
         {
             var chatId = message.Chat.Id;
 
-            CurrentState.State = State.Weather;
+            CurrentState.State = State.Help;
 
-            await botClient.SendTextMessageAsync(chatId, "Enter your city", ParseMode.Html);
+            string help = "Help commands\n" +
+                          @"/start" + " - help\n" +
+                          @"/weather" + " - help\n" +
+                          @"/covid" + " - help\n" +
+                          @"/setSchedule" + " - help";
+
+            await botClient.SendTextMessageAsync(chatId, help);
         }
 
         public bool Contains(Message message)

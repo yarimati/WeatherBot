@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using WeatherBot.Domain.Abstractions;
 using WeatherBot.Domain.Commands;
+using WeatherBot.Domain.Commands.Common;
 using WeatherBot.Domain.Commands.Covid;
 using WeatherBot.Domain.Commands.Weather;
+using WeatherBot.Domain.Handlers;
 
 namespace WeatherBot.Domain.Services
 {
@@ -16,9 +18,9 @@ namespace WeatherBot.Domain.Services
                 new StartCommand(),
                 new HelpCommand(),
                 new WeatherCommand(),
-                new AddWeatherCityCommand(),
+                new AddWeatherCityCommandHandler(),
                 new CovidCommand(),
-                new AddCovidCityCommand(),
+                new AddCovidCountryCommandHandler(),
             };
         }
         public List<ITelegramCommand> Get() => _commands;

@@ -12,12 +12,12 @@ using WeatherBot.Domain.Abstractions;
 using WeatherBot.Domain.Models.Weather;
 using WeatherBot.Domain.Models.Weather.Cities;
 
-namespace WeatherBot.Domain.Commands.Weather
+namespace WeatherBot.Domain.Handlers
 {
-    public class AddWeatherCityCommand : BaseClient, ITelegramCommand
+    public class AddWeatherCityCommandHandler : BaseClient, ITelegramCommand
     {
         public string Name => @"/addWeatherCity";
-        public async Task Execute(Message message, ITelegramBotClient botClient, params string[] values)
+        public async Task Execute(Message message, ITelegramBotClient botClient)
         {
             var chatId = message.Chat.Id;
 
@@ -86,7 +86,7 @@ namespace WeatherBot.Domain.Commands.Weather
             List<CityInfoModel> items;
 
             using (StreamReader r =
-                new StreamReader(ApiKeys.PathCityList))
+                new StreamReader(ApiKeys.PathCityList.Replace("cityId",city)))
             {
                 string jsonText = r.ReadToEnd();
                 items = JsonConvert.DeserializeObject<List<CityInfoModel>>(jsonText);

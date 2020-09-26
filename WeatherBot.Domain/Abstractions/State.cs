@@ -6,6 +6,7 @@
         Start,
         Weather,
         Covid,
-        Help
+        Help,
+        Schedule
     }
 }

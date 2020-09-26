@@ -2,27 +2,21 @@
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 using WeatherBot.Domain.Abstractions;
 
-namespace WeatherBot.Domain.Commands
+namespace WeatherBot.Domain.Commands.Schedule
 {
-    public class HelpCommand : ITelegramCommand
+    public class ScheduleCommand : ITelegramCommand
     {
-        public string Name => @"/help";
-
+        public string Name => @"/setNotification";
         public async Task Execute(Message message, ITelegramBotClient botClient)
         {
             var chatId = message.Chat.Id;
 
-            CurrentState.State = State.Help;
+            CurrentState.State = State.Schedule;
 
-            string help = "Help commands\n" +
-                          @"/help" + " - help\n" +
-                          @"/help" + " - help\n" +
-                          @"/help" + " - help\n" +
-                          @"/help" + " - help";
-
-            await botClient.SendTextMessageAsync(chatId, help);
+            await botClient.SendTextMessageAsync(chatId, "Specify the time at which you want to receive the weather (17:25)", ParseMode.Html);
         }
 
         public bool Contains(Message message)

@@ -5,7 +5,11 @@ using WeatherBot.Domain.Abstractions;
 using WeatherBot.Domain.Commands;
 using WeatherBot.Domain.Commands.Covid;
 using WeatherBot.Domain.Commands.Weather;
+using WeatherBot.Domain.Handlers;
 using WeatherBot.Domain.Services;
+using Hangfire;
+using Hangfire.SqlServer;
+using WeatherBot.Domain;
 
 namespace WeatherBot
 {
@@ -15,7 +19,7 @@ namespace WeatherBot
         static ITelegramBotClient _botClient;
         static void Main(string[] args)
         {
-            _botClient = new TelegramBotClient("Api");
+            _botClient = new TelegramBotClient(ApiKeys.TelegramApi);
 
             var me = _botClient.GetMeAsync().Result;
             Console.WriteLine(
@@ -26,6 +30,17 @@ namespace WeatherBot
 
             _botClient.OnMessage += Bot_OnMessage;
             _botClient.StartReceiving();
+
+
+            GlobalConfiguration.Configuration.UseSqlServerStorage("connection_string");
+
+            using (var server = new BackgroundJobServer())
+            {
+                BackgroundJob.Schedule(() => Console.WriteLine("Hello, world!"),TimeSpan.FromMinutes(1));
+
+                Console.WriteLine("Hangfire Server started. Press any key to exit...");
+                Console.ReadKey();
+            }
 
             Console.WriteLine("Press any key to exit");
             Console.ReadKey();
@@ -53,12 +68,12 @@ namespace WeatherBot
                     }
                     else 
                     {
-                        if (CurrentState.State == State.Weather && command is AddWeatherCityCommand)
+                        if (CurrentState.State == State.Weather && command is AddWeatherCityCommandHandler)
                         {
                             await command.Execute(message, _botClient);
                             break;
                         }
-                        else if (CurrentState.State == State.Covid && command is AddCovidCityCommand)
+                        else if (CurrentState.State == State.Covid && command is AddCovidCountryCommandHandler)
                         {
                             await command.Execute(message, _botClient);
                             break;

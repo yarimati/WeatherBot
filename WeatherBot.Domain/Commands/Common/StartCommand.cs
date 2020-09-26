@@ -5,7 +5,7 @@ using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 using WeatherBot.Domain.Abstractions;
 
-namespace WeatherBot.Domain.Commands
+namespace WeatherBot.Domain.Commands.Common
 {
     public class StartCommand : BaseClient, ITelegramCommand
     {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -11,9 +10,9 @@ using Telegram.Bot.Types.ReplyMarkups;
 using WeatherBot.Domain.Abstractions;
 using WeatherBot.Domain.Models.Covid;
 
-namespace WeatherBot.Domain.Commands.Covid
+namespace WeatherBot.Domain.Handlers
 {
-    public class AddCovidCityCommand : BaseClient, ITelegramCommand
+    public class AddCovidCountryCommandHandler : BaseClient, ITelegramCommand
     {
         public string Name => @"/addCovidCity";
         public async Task Execute(Message message, ITelegramBotClient botClient)
@@ -62,14 +61,13 @@ namespace WeatherBot.Domain.Commands.Covid
             return message.Text.Contains(Name);
         }
 
-        private async Task<CovidModel> GetCovidData(string city)
+        private async Task<CovidModel> GetCovidData(string country)
         {
-            city = city.ToLowerInvariant();
+            country = country.ToLowerInvariant();
             string covidData = string.Empty;
-
             try
             {
-                covidData = await client.GetStringAsync(ApiKeys.CovidApi);
+                covidData = await client.GetStringAsync(ApiKeys.CovidApi.Replace("country",country));
                 if (string.IsNullOrEmpty(covidData))
                     return await Task.FromResult<CovidModel>(null);
             }
