@@ -67,7 +67,7 @@ namespace WeatherBot.Domain.Handlers
             string covidData = string.Empty;
             try
             {
-                covidData = await client.GetStringAsync(ApiKeys.CovidApi.Replace("country",country));
+                covidData = await client.GetStringAsync(ApiKeys.CovidApi.Replace("countryReplace",country));
                 if (string.IsNullOrEmpty(covidData))
                     return await Task.FromResult<CovidModel>(null);
             }

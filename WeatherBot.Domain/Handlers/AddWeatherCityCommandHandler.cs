@@ -74,7 +74,7 @@ namespace WeatherBot.Domain.Handlers
             if (string.IsNullOrEmpty(cityId))
                 return await Task.FromResult<WeatherForecastModel>(null);
 
-            var weatherJson = await client.GetStringAsync(ApiKeys.WeatherApi);
+            var weatherJson = await client.GetStringAsync(ApiKeys.WeatherApi.Replace("city",cityId));
 
             var weatherObj = JsonConvert.DeserializeObject<WeatherForecastModel>(weatherJson);
 
@@ -86,7 +86,7 @@ namespace WeatherBot.Domain.Handlers
             List<CityInfoModel> items;
 
             using (StreamReader r =
-                new StreamReader(ApiKeys.PathCityList.Replace("cityId",city)))
+                new StreamReader(ApiKeys.PathCityList))
             {
                 string jsonText = r.ReadToEnd();
                 items = JsonConvert.DeserializeObject<List<CityInfoModel>>(jsonText);

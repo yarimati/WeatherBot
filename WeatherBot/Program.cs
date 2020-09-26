@@ -32,7 +32,7 @@ namespace WeatherBot
             _botClient.StartReceiving();
 
 
-            GlobalConfiguration.Configuration.UseSqlServerStorage("connection_string");
+            GlobalConfiguration.Configuration.UseSqlServerStorage(ApiKeys.ConnectionString);
 
             using (var server = new BackgroundJobServer())
             {
